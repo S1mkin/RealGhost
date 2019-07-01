@@ -1,5 +1,6 @@
 const gulp = require("gulp")
 const del = require("del")
+const browsersync = require("browser-sync").create()
 const concat = require("gulp-concat")
 const uglify = require("gulp-uglify")
 const rename = require('gulp-rename')
@@ -23,10 +24,17 @@ const conf = {
     dest: './build',
 }
 
+// Add html to build
+function html() {
+  return gulp
+    .src("./test/*.html") // Gets all files html
+    .pipe(gulp.dest(conf.dest));
+}
+
 // Compile CSS
 function styles() {
     return gulp
-      .src("src/css/*.css") // Gets all files src/css
+      .src("./src/css/*.css") // Gets all files src/css
       .pipe(concat('jquery.realghost.css'))
       .pipe(gulp.dest(conf.dest + '/css'))
       .pipe(rename({suffix: '.min'}))
@@ -37,7 +45,7 @@ function styles() {
 // Compile JS
 function scripts() {
     return gulp
-      .src("src/js/*.js") // Gets all files src/js
+      .src("./src/js/*.js") // Gets all files src/js
       .pipe(concat('jquery.realghost.js'))
       .pipe(header(banner, {pkg: pkg}))
       .pipe(gulp.dest(conf.dest + '/js'))
@@ -46,21 +54,66 @@ function scripts() {
       .pipe(gulp.dest(conf.dest + '/js'));
 }
 
+// Compile JS
+function scripts() {
+  return gulp
+    .src("./src/js/*.js") // Gets all files src/js
+    .pipe(concat('jquery.realghost.js'))
+    .pipe(header(banner, {pkg: pkg}))
+    .pipe(gulp.dest(conf.dest + '/js'))
+    .pipe(rename({suffix: '.min'}))
+    .pipe(uglify())
+    .pipe(gulp.dest(conf.dest + '/js'));
+}
 
+// Add Images
+function images() {
+  return gulp
+    .src("./src/img/**/*")
+    .pipe(gulp.dest(conf.dest + '/img'));
+}
 
+// Add Audio
+function audio() {
+  return gulp
+    .src("./src/audio/**/*")
+    .pipe(gulp.dest(conf.dest + '/audio'));
+}
+
+// clean dir /build
 function clean(){
-    return del(['build/*']);
+    return del(['./build/*']);
 }
 
 
+// Watch files
+function watchFiles() {
+  gulp.watch("./test/*.html", html);
+  gulp.watch("./src/css/*.css", styles);
+  gulp.watch("./src/js/*.js", scripts);
+}
 
-gulp.task("styles", styles);
-gulp.task("scripts", scripts);
+// BrowserSync
+function browserSync(done) {
+  browsersync.init({
+    server: {
+      baseDir: "./build/"
+    },
+    port: 3000
+  });
+  done();
+}
 
-let build = gulp.series(clean,
-    gulp.parallel(styles, scripts)
-);
+// define complex tasks
+const build = gulp.series(clean, gulp.parallel(html, styles, scripts, images, audio));
+const watch = gulp.parallel(watchFiles, browserSync);
 
-gulp.task('build', build);
+// export tasks
+exports.html = html;
+exports.styles = styles;
+exports.scripts = scripts;
+exports.clean = clean;
+exports.watch = watch;
+exports.build = build;
 
-//gulp.task('dev', gulp.series('build', 'watch'));
+//example https://gist.github.com/jeromecoupe/0b807b0c1050647eb340360902c3203a
