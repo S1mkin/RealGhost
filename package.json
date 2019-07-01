@@ -4,7 +4,12 @@
   "main": "index.js",
   "license": "MIT",
   "author": "Simkin Andrey <an.simkin@mail.ru>",
+  "scripts": {
+    "build": "gulp build",
+    "watch": "gulp watch"
+  },
   "dependencies": {
+    "browser-sync": "^2.26.7",
     "del": "^4.1.1",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",

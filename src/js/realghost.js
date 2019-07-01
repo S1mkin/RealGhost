@@ -82,17 +82,14 @@
         audio.play();
     }
 
-    $('.cbm_wrap').addClass('quaking');
-
     //start animation
     $('#'+gostID).animate(settings.endAnimatePos, settings.speed, 'swing', function(){ //linear
 
         //remove object after animation
         $('#'+gostID).remove(); 
 
-        $('.cbm_wrap').removeClass('quaking');
         //audio.pause();
-        ym(23228761, 'reachGoal', 'ghost');
+
     });
                 
     return this;
