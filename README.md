@@ -8,7 +8,7 @@ Only for joke.
 1\.  Add latest jQuery and realGhost files
 
 ```html
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
 <link  href="/path/to/css/jquery.realghost.min.css" rel="stylesheet">
 <script src="/path/to/js/jquery.realghost.min.js"></script>
